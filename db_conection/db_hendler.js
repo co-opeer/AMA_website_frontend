@@ -45,7 +45,7 @@ function getAllRecords(callback) {
     });
 }
 
-//addRecord('http://example.com', 'example@example.com');
+addRecord('http://example.com', 'example@example.com');
 updateRecordStatusAndResult(5,'done',1)
 getAllRecords((rows) => {
     console.log('Усі записи:');
