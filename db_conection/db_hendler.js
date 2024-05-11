@@ -1,14 +1,19 @@
 const mysql = require('mysql');
 
-// Параметри підключення до бази даних
+const fs = require('fs');
+
+
+const rawdata = fs.readFileSync('db_const.json');
+const config = JSON.parse(rawdata);
+
+// Підключення до бази даних з конфігураційними даними
 const connection = mysql.createConnection({
-    host: 'mysql-mykoladiachuk.alwaysdata.net',
-    user: '358029',
-    password: 'asertan12',
-    database: 'mykoladiachuk_photo_requests'
+    host: config.host,
+    user: config.user,
+    password: config.password,
+    database: config.database
 });
 
-// Підключення до бази даних
 connection.connect((err) => {
     if (err) {
         console.error('Помилка підключення до бази даних: ' + err.stack);
