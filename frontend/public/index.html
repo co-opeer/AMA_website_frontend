@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Upload to Shared Google Drive</title>
+</head>
+<body>
+<h1>Upload Photo to Shared Google Drive</h1>
+<input type="file" id="fileInput" />
+<button onclick="handleUpload()">Upload</button>
+
+<script>
+    function handleUpload() {
+        var fileInput = document.getElementById('fileInput');
+        var file = fileInput.files[0];
+        var formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData,
+        }).then(response => response.json())
+            .then(data => {
+                if (data.fileId) {
+                    alert('File uploaded successfully! File ID: ' + data.fileId);
+                } else {
+                    alert('File upload failed: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('File upload failed: ' + error.message);
+            });
+    }
+</script>
+</body>
+</html>
