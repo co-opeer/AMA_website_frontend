@@ -1,52 +1,90 @@
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
+/* General reset for better cross-browser compatibility */
+* {
+    box-sizing: border-box;
     margin: 0;
-    background: #f0f0f0;
+    padding: 0;
 }
 
+/* Basic body styling for centering content */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #e0e0e0;
+    padding: 20px;
+}
+
+/* Container styling for centering and shadow effect */
+.container {
+    background-color: #fff;
+    padding: 30px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Company logo styling */
+.company-logo {
+    max-width: 100px;
+    margin-bottom: 20px;
+}
+
+/* Company link styling */
+.company-link {
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+/* Header styling */
 h1 {
+    margin-bottom: 20px;
+    font-size: 26px;
     color: #333;
 }
 
-input[type="file"] {
-    margin: 20px 0;
+/* Flexbox styling for upload section */
+.upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
 }
 
-button {
+/* Styling for file input */
+.file-input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Styling for upload button */
+.upload-button {
     padding: 10px 20px;
-    background: #4285f4;
+    font-size: 16px;
+    background-color: #007BFF;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background-color 0.3s;
+    width: 100%;
+    max-width: 300px;
 }
 
-button:disabled {
-    background: #ccc;
+/* Styling for disabled upload button */
+.upload-button:disabled {
+    background-color: #ccc;
     cursor: not-allowed;
 }
 
-button:hover:not(:disabled) {
-    background: #357ae8;
-}
-
-@media (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-
-    h1 {
-        font-size: 1.5em;
-        text-align: center;
-    }
-
-    button {
-        width: 100%;
-    }
+/* Hover effect for enabled upload button */
+.upload-button:not(:disabled):hover {
+    background-color: #0056b3;
 }

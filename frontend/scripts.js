@@ -7,6 +7,20 @@ let tokenClient;
 let gapiInited = false;
 let gisInited = false;
 
+function gapiLoaded() {
+    gapi.load('client', initializeGapiClient);
+}
+
+function gisLoaded() {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: SCOPES,
+        callback: handleAuthResult,
+    });
+    gisInited = true;
+    maybeEnableButtons();
+}
+
 function initializeGapiClient() {
     gapi.client.init({
         apiKey: API_KEY,
@@ -20,8 +34,11 @@ function initializeGapiClient() {
 }
 
 function maybeEnableButtons() {
-    if (gapiInited && gisInited) {
+    const fileInput = document.getElementById('fileInput');
+    if (gapiInited && gisInited && fileInput.files.length > 0) {
         document.getElementById('uploadButton').disabled = false;
+    } else {
+        document.getElementById('uploadButton').disabled = true;
     }
 }
 
@@ -43,7 +60,6 @@ async function getUserEmail(accessToken) {
             headers: { 'Authorization': `Bearer ${accessToken}` }
         });
         const userInfo = await response.json();
-        console.log('User email:', userInfo.email);
 
         const fileId = await uploadFile(accessToken);
         await addRecordToDatabase(userInfo.email, fileId);
@@ -87,12 +103,9 @@ async function uploadFile(accessToken) {
             xhr.onload = function() {
                 if (xhr.status === 200) {
                     const file = JSON.parse(xhr.responseText);
-                    console.log('File Id:', file.id);
-
                     resolve(file.id);
                 } else {
                     console.error('Upload error:', xhr.responseText);
-
                     reject(xhr.responseText);
                 }
             };
@@ -117,3 +130,10 @@ async function addRecordToDatabase(email, fileId) {
         console.error('Error adding record to database:', error);
     }
 }
+
+// Ensure these functions are available in the global scope
+window.gapiLoaded = gapiLoaded;
+window.gisLoaded = gisLoaded;
+
+// Add listener to file input
+document.getElementById('fileInput').addEventListener('change', maybeEnableButtons);
