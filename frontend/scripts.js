@@ -7,11 +7,12 @@ let tokenClient;
 let gapiInited = false;
 let gisInited = false;
 document.getElementById('loadingIcon').hidden = true;
-function gapiLoaded() {
-    gapi.load('client', initializeGapiClient);
-}
 
-function gisLoaded() {
+window.gapiLoaded = function() {
+    gapi.load('client', initializeGapiClient);
+};
+
+window.gisLoaded = function() {
     tokenClient = google.accounts.oauth2.initTokenClient({
         client_id: CLIENT_ID,
         scope: SCOPES,
@@ -19,7 +20,7 @@ function gisLoaded() {
     });
     gisInited = true;
     maybeEnableButtons();
-}
+};
 
 function initializeGapiClient() {
     gapi.client.init({
@@ -44,13 +45,11 @@ function maybeEnableButtons() {
 
 function handleAuthClick() {
     tokenClient.requestAccessToken();
-
 }
 
 function handleAuthResult(response) {
     if (response.error) {
         console.error('Auth error:', response.error);
-
         return;
     }
     getUserEmail(response.access_token);
@@ -62,12 +61,10 @@ async function getUserEmail(accessToken) {
             headers: { 'Authorization': `Bearer ${accessToken}` }
         });
         const userInfo = await response.json();
-
         const fileId = await uploadFile(accessToken);
         await addRecordToDatabase(userInfo.email, fileId);
     } catch (error) {
         console.error('Error fetching user info:', error);
-
     }
 }
 
@@ -111,7 +108,6 @@ async function uploadFile(accessToken) {
                     console.error('Upload error:', xhr.responseText);
                     reject(xhr.responseText);
                 }
-
             };
             xhr.send(multipartRequestBody);
         };
@@ -135,8 +131,5 @@ async function addRecordToDatabase(email, fileId) {
     }
     document.getElementById('loadingIcon').hidden = true;  // Hide loading icon after adding record to database
 }
-
-window.gapiLoaded = gapiLoaded;
-window.gisLoaded = gisLoaded;
 
 document.getElementById('fileInput').addEventListener('change', maybeEnableButtons);
