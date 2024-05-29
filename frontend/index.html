@@ -21,6 +21,21 @@
         <span id="loadingIcon" class="loader"></span>
     </div>
 </div>
+<script>
+    window.gapiLoaded = function() {
+        gapi.load('client', initializeGapiClient);
+    };
+
+    window.gisLoaded = function() {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: CLIENT_ID,
+            scope: SCOPES,
+            callback: handleAuthResult,
+        });
+        gisInited = true;
+        maybeEnableButtons();
+    };
+</script>
 
 <script src="https://apis.google.com/js/api.js" async defer onload="gapiLoaded()"></script>
 <script src="https://accounts.google.com/gsi/client" async defer onload="gisLoaded()"></script>
