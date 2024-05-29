@@ -6,7 +6,7 @@ const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapi
 let tokenClient;
 let gapiInited = false;
 let gisInited = false;
-
+document.getElementById('loadingIcon').hidden = false;
 function gapiLoaded() {
     gapi.load('client', initializeGapiClient);
 }
@@ -44,11 +44,13 @@ function maybeEnableButtons() {
 
 function handleAuthClick() {
     tokenClient.requestAccessToken();
+
 }
 
 function handleAuthResult(response) {
     if (response.error) {
         console.error('Auth error:', response.error);
+
         return;
     }
     getUserEmail(response.access_token);
@@ -65,6 +67,7 @@ async function getUserEmail(accessToken) {
         await addRecordToDatabase(userInfo.email, fileId);
     } catch (error) {
         console.error('Error fetching user info:', error);
+
     }
 }
 
@@ -72,7 +75,7 @@ async function uploadFile(accessToken) {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
     const reader = new FileReader();
-
+    document.getElementById('loadingIcon').hidden = false;
     reader.readAsArrayBuffer(file);
     return new Promise((resolve, reject) => {
         reader.onload = async function(e) {
@@ -108,6 +111,7 @@ async function uploadFile(accessToken) {
                     console.error('Upload error:', xhr.responseText);
                     reject(xhr.responseText);
                 }
+
             };
             xhr.send(multipartRequestBody);
         };
@@ -116,7 +120,7 @@ async function uploadFile(accessToken) {
 
 async function addRecordToDatabase(email, fileId) {
     try {
-        const response = await fetch('http://localhost:5000/predict', {
+        const response = await fetch('https://atomic-adelheid-mykola-c2bbd3fd.koyeb.app/predict', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email, url: `https://drive.google.com/file/d/${fileId}/view?usp=sharing` })
@@ -129,11 +133,10 @@ async function addRecordToDatabase(email, fileId) {
     } catch (error) {
         console.error('Error adding record to database:', error);
     }
+    document.getElementById('loadingIcon').hidden = true;  // Hide loading icon after adding record to database
 }
 
-// Ensure these functions are available in the global scope
 window.gapiLoaded = gapiLoaded;
 window.gisLoaded = gisLoaded;
 
-// Add listener to file input
 document.getElementById('fileInput').addEventListener('change', maybeEnableButtons);
