@@ -6,7 +6,7 @@ const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapi
 let tokenClient;
 let gapiInited = false;
 let gisInited = false;
-document.getElementById('loadingIcon').hidden = false;
+document.getElementById('loadingIcon').hidden = true;
 function gapiLoaded() {
     gapi.load('client', initializeGapiClient);
 }
